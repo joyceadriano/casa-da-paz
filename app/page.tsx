@@ -1,101 +1,133 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Layout from "./layout";
+import axios from "axios";
+
+type ImageType = {
+  id: number;
+  url: string;
+  type: string;
+  path: string;
+};
+
+export default function Inicio() {
+  const [backgroundImage, setBackgroundImage] = useState("");
+  const [isClient, setIsClient] = useState(false); 
+
+  useEffect(() => {
+    setIsClient(true);
+
+    const fetchBackgroundImage = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/images");
+        const homeImage = response.data.find((img: ImageType) => img.type === "home");
+
+        if (homeImage) {
+          setBackgroundImage(`http://127.0.0.1:8000/storage/${homeImage.path}`);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar a imagem:", error);
+      }
+    };
+
+    fetchBackgroundImage();
+  }, []);
+
+  if (!isClient) return null;
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <Layout>
+      <motion.section
+        className="min-h-screen flex flex-col items-center justify-center text-center bg-gradient-to-b from-white to-gray-100 relative"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        {backgroundImage && (
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              filter: 'blur(0.2px)',
+              zIndex: -1,
+            }}
+          />
+        )}
+  
+        <motion.h1
+          className="text-6xl font-extrabold text-[#89b72d] relative"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Casa da Paz
+        </motion.h1>
+        <motion.p
+          className="text-xl max-w-lg mt-4 text-white relative"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.0, delay: 0.3 }}
+        >
+          “Sei que meu trabalho é uma gota no oceano, mas sem ele, o oceano
+          seria menor" - Santa Teresa de Calcutá
+        </motion.p>
+        <motion.a
+          href="/como-ajudar"
+          className="mt-6 px-6 py-3 bg-[#89b72d] text-white rounded-lg hover:bg-green-600 transition duration-200 shadow-lg relative"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          CONHEÇA A CASA DA PAZ
+        </motion.a>
+  
+        {/* Seção de Recursos */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto px-4">
+          <motion.div
+            className="bg-white p-6 rounded-lg shadow-lg text-center"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <h2 className="text-2xl font-bold text-[#89b72d]">
+            No que acreditamos?            </h2>
+            <p className="mt-2">
+            Acreditamos que é possível mudar o destino de crianças e adolescentes por meio do conhecimento. 
+            </p>
+          </motion.div>
+  
+          <motion.div
+            className="bg-white p-6 rounded-lg shadow-lg text-center"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
           >
-            Read our docs
-          </a>
+            <h2 className="text-2xl font-bold text-[#89b72d]">
+            Onde e como as atividades acontecem?            </h2>
+            <p className="mt-2">
+            As atividades da Casa da Paz são realizadas no contraturno escolar tanto nas nossas instalações quanto em instituições parceiras.
+            </p>
+          </motion.div>
+  
+          <motion.div
+            className="bg-white p-6 rounded-lg shadow-lg text-center"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            <h2 className="text-2xl font-bold text-[#89b72d]">
+            De onde vêm os recursos?            </h2>
+            <p className="mt-2">
+            Os recursos para a manutenção dos projetos da Casa da Paz são obtidos através de doações de pessoas físicas e jurídicas. </p>
+          </motion.div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </motion.section>
+    </Layout>
   );
+  
 }

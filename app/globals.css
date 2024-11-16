@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Adicione quaisquer estilos globais adicionais abaixo */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -25,3 +27,7 @@ body {
     text-wrap: balance;
   }
 }
+html {
+  scroll-behavior: smooth;
+}
+/* globals.css */
